@@ -7,6 +7,38 @@
     <title>Kanban Board</title>
 </head>
 <body>
-    
+    <div id="app">
+        <div id="sidebar">
+            <h2>Boards</h2>
+            <button id="createBoardBtn">Create Board</button>
+            <ul id="boardList"></ul>
+        </div>
+
+        <div id="main">
+            <div id="boardDetails">
+                <p>No board is selected. Create or select a board.</p>
+            </div>
+        </div>
+
+        <!-- pop-up box -->
+        <div class="modalOverlay" id="modalOverlay">
+            <div class="modalContent" id="modalContent">
+                <h3 id="modalTitle"> Modal Title</h3>
+                <input type="text" id="modalInput" placeholder="Enter name ...">
+                <input type="hidden" id="modalContextType">
+                <input type="hidden" id="modalContextId">
+                <div class="modalButton">
+                    <button class="saveBtn" id="modalSaveBtn">
+                        Save
+                    </button>
+                    <button class="cancelBtn" id="modalCancelBtn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="./index.js"></script>
 </body>
 </html>
