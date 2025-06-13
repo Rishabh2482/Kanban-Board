@@ -55,7 +55,7 @@ function handleModalSave(){
 
     switch(type){
         case 'createBoard':
-            console.log(type);
+            // console.log(type);
             createBoard(nameValue);
             break;
     }
@@ -71,6 +71,7 @@ function createBoard(boardName){
     };
     boards.push(newBoard);
     renderBoardList();
+    selectBoard(newBoard.id);   // after creating new board automaticaly the selectBoard function will set active class to that board.
 }
 
 // when someone click on any board item then this function exec, this is used to render the that perticular boards coloumn on the main page.
@@ -134,3 +135,4 @@ function renderBoardDetails(board){
     boardDetailsEl.appendChild(titleArea);
 }
 
+//  fix:- the issue time:-1:49:00
