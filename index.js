@@ -55,8 +55,23 @@ function handleModalSave(){
 
     switch(type){
         case 'createBoard':
-            // console.log(type);
             createBoard(nameValue);
+            break;
+
+        case 'createColumn':
+            createColumn(currentBoardId, nameValue);
+            break;
+
+        case 'editColumn':
+            editColumn(id, nameValue);
+            break;
+
+        case 'createTicket':
+            createBoard(id, nameValue);
+            break;
+
+        case 'editTicket':
+            createBoard(id, nameValue);
             break;
     }
 
@@ -81,6 +96,37 @@ function selectBoard(boardId){
     const board = boards.find(b => b.id === boardId);  //finds the perticular board and then add the details on the main page for that perticular board.
     renderBoardDetails(board) ;
 }
+
+// Column
+function createColumn(boardId, nameValue){
+    const board = boards.find(b => b.id == boardId);
+    if(!board) return;
+
+    board.columns.push({
+        id: genrateId('col'),
+        name: nameValue,
+        tickets: []
+    })
+    renderBoardDetails(board);
+}
+
+function editColumn(colId, nameValue){
+    const board = boards.find(b => b.id===currentBoardId);
+    if(!board) return;
+    const column = board.columns.find(c => c.id == colId);
+    if(!column) return;
+    column.name = nameValue;
+    renderBoardDetails(board);
+}
+
+// remove all the columns in columns array whoes columnid is equal to current colId.
+function deleteColumn(colId){
+    const board = boards.find(b => b.id===currentBoardId);
+    if(!board) return;
+    board.columns = board.columns.filter(c => c.id !== colId);
+    renderBoardDetails(board);
+}
+
 
 // genrate the id for boards,
 function genrateId(prefix){
@@ -114,8 +160,9 @@ function renderBoardDetails(board){
     }
 
     const titleArea = document.createElement('div');
-    titleArea.classList.add('boaardTitleArea');
+    titleArea.classList.add('boardTitleArea');
 
+    
     const h2 = document.createElement('h2');
     h2.textContent = board.name;
     titleArea.appendChild(h2);
@@ -131,8 +178,66 @@ function renderBoardDetails(board){
         })
     })
 
-    console.log(titleArea);
+    titleArea.appendChild(addColumnBtn);
     boardDetailsEl.appendChild(titleArea);
+
+    // Now we have to render complete list of all coloumns in a board.
+    const columnsContainer = document.createElement('div');
+    columnsContainer.classList.add('columnsContainer');
+
+    board.columns.forEach(column => {
+        const columnEl = document.createElement('div');
+        columnEl.classList.add('column');
+
+        const columnHeader = document.createElement('div');
+        columnHeader.classList.add('columnHeader');
+
+        const colTitle = document.createElement('h3');
+        colTitle.textContent = column.name;
+
+        const colButtonsDiv = document.createElement('div');
+        colButtonsDiv.classList.add('columnButtons');
+
+        const editColBtn = document.createElement("button");
+        editColBtn.classList.add('editColBtn');
+        editColBtn.textContent = '✏️';
+        editColBtn.addEventListener('click', () => {
+            openModal({
+                title: 'Edit Column',
+                contextType: 'editColumn',
+                contextId: column.id,
+                defaultValue: column.name
+            })
+        })
+        
+        const deleteColBtn = document.createElement("button");
+        deleteColBtn.classList.add('deleteColBtn');
+        deleteColBtn.textContent = '🗑️';
+        deleteColBtn.addEventListener('click', () => {
+            deleteColumn(column.id);
+        })
+
+        colButtonsDiv.appendChild(editColBtn);
+        colButtonsDiv.appendChild(deleteColBtn);
+
+        columnHeader.appendChild(colTitle);
+        columnHeader.appendChild(colButtonsDiv);
+
+        columnEl.appendChild(columnHeader);
+
+        const addTicketBtn = document.createElement("button");
+        addTicketBtn.classList.add('addTicketBtn');
+        addTicketBtn.textContent = 'Add Ticket';
+        addTicketBtn.addEventListener('click', () => {
+            deleteColumn('Add Ticket');
+        })
+
+        columnEl.appendChild(addTicketBtn);
+
+        columnsContainer.appendChild(columnEl);
+
+    })
+
+    boardDetailsEl.appendChild(columnsContainer);
 }
 
-//  fix:- the issue time:-1:49:00

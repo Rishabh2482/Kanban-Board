@@ -38,7 +38,7 @@ body{
     border-radius: 4px;
     margin-bottom: 20px;
 }
-#createBoardBtn:hover, .saveBtn:hover{
+#createBoardBtn:hover, .saveBtn:hover, .addColumnBtn:hover{
     background: #04865f;
 }
 
@@ -135,4 +135,73 @@ body{
 
 #boardList li.active{
     background-color: #0f3c78;
+}
+
+.addColumnBtn {
+    padding: 8px 12px;
+    background-color: #06aa7b;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.boardTitleArea{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.boardTitleArea h2{
+    margin-right: 20px;
+}
+
+.columnsContainer{
+    display: flex;
+    gap:10px;
+    overflow-x: auto;
+}
+
+.column {
+    background-color: #e9e9e9;
+    border-radius: 5px;
+    padding: 10px;
+    min-width: 220px;
+    max-width: 500px;
+    overflow-y: hidden;
+    position: relative;
+}
+
+.columnHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom:8px;
+}
+
+.columnHeader h3{
+    margin: 0;
+    font-size: 16px;
+}
+
+.columnButtons{
+    display: flex;
+    gap: 6px;
+}
+
+.editColBtn, .deleteColBtn{
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.addTicketBtn{
+    background-color: yellowgreen;
+    border: none;
+    color: #fff;
+    padding: 6px 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
