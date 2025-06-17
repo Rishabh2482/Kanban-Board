@@ -189,7 +189,7 @@ body{
     gap: 6px;
 }
 
-.editColBtn, .deleteColBtn{
+.editColBtn, .deleteColBtn, .editTicketBtn ,.deleteTicketBtn{
     background: none;
     border: none;
     color: #333;
@@ -204,4 +204,26 @@ body{
     padding: 6px 10px;
     cursor: pointer;
     margin-bottom: 10px;
+}
+
+.ticket {
+    background-color: #fff;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticketName {
+    flex: 1;
+}
+
+.ticketButtons {
+    display: flex;
+    gap: 6px;
+    margin-left: 10px;
 }

@@ -67,11 +67,11 @@ function handleModalSave(){
             break;
 
         case 'createTicket':
-            createBoard(id, nameValue);
+            createTicket(id, nameValue);
             break;
 
         case 'editTicket':
-            createBoard(id, nameValue);
+            updateTicket(id, nameValue);
             break;
     }
 
@@ -97,7 +97,7 @@ function selectBoard(boardId){
     renderBoardDetails(board) ;
 }
 
-// Column
+//! Column
 function createColumn(boardId, nameValue){
     const board = boards.find(b => b.id == boardId);
     if(!board) return;
@@ -124,6 +124,41 @@ function deleteColumn(colId){
     const board = boards.find(b => b.id===currentBoardId);
     if(!board) return;
     board.columns = board.columns.filter(c => c.id !== colId);
+    renderBoardDetails(board);
+}
+
+// ! Ticket
+function createTicket(colId, nameValue){
+    const board = boards.find(b => b.id == currentBoardId);
+    if(!board) return;
+    const column = board.columns.find(c => c.id == colId);
+    if(!column) return;
+    column.tickets.push({
+        id: genrateId('ticket'),
+        name: nameValue,
+    })
+    renderBoardDetails(board);
+}
+
+function updateTicket(ticketId, nameValue){
+    const board = boards.find(b => b.id===currentBoardId);
+    if(!board) return;
+    for(const col of board.columns){
+        const ticket = col.tickets.find(t => t.id === ticketId);
+        if(ticket){
+            ticket.name = nameValue;
+            break;
+        }
+    }
+    renderBoardDetails(board);
+}
+
+function deleteTicket(ticketId){
+    const board = boards.find(b => b.id===currentBoardId);
+    if(!board) return;
+    for(const col of board.columns){
+        col.tickets = col.tickets.filter(t => t.id !== ticketId);
+    }
     renderBoardDetails(board);
 }
 
@@ -194,6 +229,7 @@ function renderBoardDetails(board){
 
         const colTitle = document.createElement('h3');
         colTitle.textContent = column.name;
+        // console.log(column.name);       //^ .name property are attached directly with the form values to get the value directly from formelement in js we can use .name property
 
         const colButtonsDiv = document.createElement('div');
         colButtonsDiv.classList.add('columnButtons');
@@ -229,11 +265,59 @@ function renderBoardDetails(board){
         addTicketBtn.classList.add('addTicketBtn');
         addTicketBtn.textContent = 'Add Ticket';
         addTicketBtn.addEventListener('click', () => {
-            deleteColumn('Add Ticket');
+            openModal({
+                title: 'Create Ticket',
+                contextType: 'createTicket',
+                contextId: column.id,
+                defaultValue: column.name
+            })
         })
 
         columnEl.appendChild(addTicketBtn);
 
+        const ticketsContainer = document.createElement('div');
+        ticketsContainer.classList.add('ticketsContainer');
+
+        column.tickets.forEach(ticket => {
+            const ticketEl = document.createElement('div');
+            ticketEl.classList.add('ticket');
+
+            const ticketNameSpan = document.createElement('span');
+            ticketNameSpan.classList.add('ticketName');
+            ticketNameSpan.textContent = ticket.name;
+
+            const ticketButtonsDiv = document.createElement('div');
+            ticketButtonsDiv.classList.add('ticketButtons');
+
+            const editTicketBtn = document.createElement('button');
+            editTicketBtn.classList.add('editTicketBtn');
+            editTicketBtn.textContent = '✏️';
+            editTicketBtn.addEventListener('click', () => {
+                openModal({
+                    title: 'Edit Ticket',
+                    contextType: 'editTicket',
+                    contextId: ticket.id,
+                    defaultValue: ticket.name
+                })
+            })
+
+            const deleteTicketBtn = document.createElement('button');
+            deleteTicketBtn.classList.add('deleteTicketBtn');
+            deleteTicketBtn.textContent = '🗑️';
+            deleteTicketBtn.addEventListener('click', () => {
+                deleteTicket(ticket.id);
+            })
+
+            ticketButtonsDiv.appendChild(editTicketBtn);
+            ticketButtonsDiv.appendChild(deleteTicketBtn);
+
+            ticketEl.appendChild(ticketNameSpan);
+            ticketEl.appendChild(ticketButtonsDiv);
+
+            ticketsContainer.appendChild(ticketEl);
+        })
+
+        columnEl.appendChild(ticketsContainer);
         columnsContainer.appendChild(columnEl);
 
     })
