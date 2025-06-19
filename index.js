@@ -277,11 +277,21 @@ function renderBoardDetails(board){
 
         const ticketsContainer = document.createElement('div');
         ticketsContainer.classList.add('ticketsContainer');
+// drag and drop fn
+        columnEl.addEventListener('dragover', dragOverHandler);
+        columnEl.addEventListener('drop', e => dropHandler(e, column, board));
 
         column.tickets.forEach(ticket => {
             const ticketEl = document.createElement('div');
             ticketEl.classList.add('ticket');
+// drag and drop fn
+            ticketEl.draggable = true;
+            ticketEl.addEventListener('dragstart', e =>{
+                dragStartHandler(e, ticket, column, board);
+            })
 
+            ticketEl.addEventListener('dragend', dragEndHandler);
+//
             const ticketNameSpan = document.createElement('span');
             ticketNameSpan.classList.add('ticketName');
             ticketNameSpan.textContent = ticket.name;
@@ -325,3 +335,24 @@ function renderBoardDetails(board){
     boardDetailsEl.appendChild(columnsContainer);
 }
 
+// Drag and Drop
+let draggedTicketData = null;
+
+function dragStartHandler(e, ticket, fromColumn, fromBoard){// this define the location from where the drag started
+    draggedTicketData = {ticket, fromColumn, fromBoard}
+}
+
+function dragEndHandler(e){
+    draggedTicketData = null;
+}
+function dragOverHandler(e){
+    e.preventDefault();
+}
+function dropHandler(e, toColumn, toBoard){
+    e.preventDefault();
+    if(!draggedTicketData) return;
+    const {ticket, fromColumn, fromBoard} =draggedTicketData;
+    fromColumn.tickets =  fromColumn.tickets.filter(t => t.id !== ticket.id);
+    toColumn.tickets.push(ticket);
+    renderBoardDetails(fromBoard);
+}
